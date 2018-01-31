@@ -1,6 +1,12 @@
 package fi.kauppa.kirjakauppa.beans;
 
+import javax.persistence.*;
+
+@Entity
 public class Book {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 	private String title, author, isbn;
 	private int year;
 	private Double price;
