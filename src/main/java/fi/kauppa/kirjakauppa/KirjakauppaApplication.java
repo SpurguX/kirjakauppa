@@ -1,12 +1,35 @@
 package fi.kauppa.kirjakauppa;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import fi.kauppa.kirjakauppa.beans.Book;
+import fi.kauppa.kirjakauppa.beans.BookRepository;
 
 @SpringBootApplication
 public class KirjakauppaApplication {
-
+	private static final Logger log = LoggerFactory.getLogger(KirjakauppaApplication.class);
+	
 	public static void main(String[] args) {
 		SpringApplication.run(KirjakauppaApplication.class, args);
+	}
+	
+	@Bean
+	public CommandLineRunner KirjakauppaRunner(BookRepository repo) {
+		return (args) -> {
+			log.info("Adding books...");
+			repo.save(new Book("Kova kirja", "Kova Kirjailija", "fgdf-12323", 2011, 8.99));
+			repo.save(new Book("Jeejeejuu", "Jamppa J.", "asdf-2323", 2013, 9.99));
+			repo.save(new Book("Pamputuksen hinta", "Ritva Ankka", "uju-12323", 2009, 7.99));
+			
+			log.info("Fetching books...");
+			for (Book b : repo.findAll()) {
+				log.info(b.toString());
+			}
+		};
 	}
 }
