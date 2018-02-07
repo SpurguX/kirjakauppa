@@ -2,6 +2,9 @@ package fi.kauppa.kirjakauppa.beans;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity
 public class Book {
 	@Id
@@ -10,6 +13,11 @@ public class Book {
 	private String title, author, isbn;
 	private int year;
 	private Double price;
+	
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "genreId")
+	private Genre genre;
 	
 	public Book() {}
 	
@@ -20,6 +28,24 @@ public class Book {
 		this.isbn = isbn;
 		this.year = year;
 		this.price = price;
+	}
+	
+	public Book(String title, String author, String isbn, int year, Double price, Genre genre) {
+		super();
+		this.title = title;
+		this.author = author;
+		this.isbn = isbn;
+		this.year = year;
+		this.price = price;
+		this.genre = genre;
+	}
+
+	public Genre getGenre() {
+		return genre;
+	}
+
+	public void setGenre(Genre genre) {
+		this.genre = genre;
 	}
 
 	public Long getId() {

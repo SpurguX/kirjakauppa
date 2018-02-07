@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 
 import fi.kauppa.kirjakauppa.beans.Book;
 import fi.kauppa.kirjakauppa.beans.BookRepository;
+import fi.kauppa.kirjakauppa.beans.Genre;
+import fi.kauppa.kirjakauppa.beans.GenreRepository;
 
 @SpringBootApplication
 public class KirjakauppaApplication {
@@ -19,15 +21,23 @@ public class KirjakauppaApplication {
 	}
 	
 	@Bean
-	public CommandLineRunner KirjakauppaRunner(BookRepository repo) {
+	public CommandLineRunner KirjakauppaRunner(BookRepository bookrepo, GenreRepository genrerepo) {
 		return (args) -> {
+			log.info("Adding genres...");
+			genrerepo.save(new Genre("Kauhu"));
+			genrerepo.save(new Genre("Jännitys"));
+			genrerepo.save(new Genre("Romantiikka"));
+			genrerepo.save(new Genre("Scifi"));
+			
 			log.info("Adding books...");
-			repo.save(new Book("Kova kirja", "Kova Kirjailija", "fgdf-12323", 2011, 8.99));
-			repo.save(new Book("Jeejeejuu", "Jamppa J.", "asdf-2323", 2013, 9.99));
-			repo.save(new Book("Pamputuksen hinta", "Ritva Ankka", "uju-12323", 2009, 7.99));
+			bookrepo.save(new Book("Kova kirja", "Kova Kirjailija", "fgdf-12323", 2011, 8.99, genrerepo.findByGenrename("Scifi").get(0)));
+			bookrepo.save(new Book("Jeejeejuu", "Jamppa J.", "asdf-2323", 2013, 9.99, genrerepo.findByGenrename("Romantiikka").get(0)));
+			bookrepo.save(new Book("Pamputuksen hinta", "Ritva Ankka", "uju-12323", 2009, 7.99, genrerepo.findByGenrename("Jännitys").get(0)));
+			
+			
 			
 			log.info("Fetching books...");
-			for (Book b : repo.findAll()) {
+			for (Book b : bookrepo.findAll()) {
 				log.info(b.toString());
 			}
 		};

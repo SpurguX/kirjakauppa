@@ -1,5 +1,7 @@
 package fi.kauppa.kirjakauppa.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import fi.kauppa.kirjakauppa.beans.Book;
 import fi.kauppa.kirjakauppa.beans.BookRepository;
+import fi.kauppa.kirjakauppa.beans.GenreRepository;
 
 @Controller
 
@@ -18,10 +21,9 @@ public class BookController {
 	@Autowired
 	private BookRepository repo;
 	
-	@RequestMapping("*") 
-	public String index() {
-		return "booklist";
-	}
+	@Autowired
+	private GenreRepository genreRepo;
+
 	
 	@RequestMapping(value = "/booklist", method=RequestMethod.GET)
 	public String showBooklist(Model model) {
@@ -32,6 +34,7 @@ public class BookController {
 	@RequestMapping(value = "/addbook", method=RequestMethod.GET)
 	public String toAddBookPage(Model model) {
 		model.addAttribute("book", new Book());
+		model.addAttribute("genres", genreRepo.findAll());
 		return "addbook";
 	}
 	
@@ -45,5 +48,19 @@ public class BookController {
 	public String deleteBook(@PathVariable("id") Long id, Book book) {
 		repo.delete(book);
 		return "redirect:../booklist";
+	}
+	
+	//JSON
+	
+	@ResponseBody
+	@RequestMapping(value = "/booklistJson", method=RequestMethod.GET)
+	public List<Book> booklistJson() {
+		return (List<Book>) repo.findAll();
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/bookJson/{id}", method=RequestMethod.GET)
+	public Book bookJsonById(@PathVariable("id") Long id) {
+		return repo.findOne(id);
 	}
 }
