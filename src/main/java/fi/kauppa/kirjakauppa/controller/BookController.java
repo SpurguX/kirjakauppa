@@ -24,6 +24,10 @@ public class BookController {
 	@Autowired
 	private GenreRepository genreRepo;
 
+	@RequestMapping(value = "/login")
+	public String loginPage() {
+		return "login";
+	}
 	
 	@RequestMapping(value = "/booklist", method=RequestMethod.GET)
 	public String showBooklist(Model model) {
@@ -63,4 +67,6 @@ public class BookController {
 	public Book bookJsonById(@PathVariable("id") Long id) {
 		return repo.findOne(id);
 	}
+	
+	
 }

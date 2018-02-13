@@ -43,6 +43,10 @@ public class Book {
 	public Genre getGenre() {
 		return genre;
 	}
+	
+	public String getGenrename() {
+		return genre.getGenrename();
+	}
 
 	public void setGenre(Genre genre) {
 		this.genre = genre;
